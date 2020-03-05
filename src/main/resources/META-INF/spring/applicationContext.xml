@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:camel="http://camel.apache.org/schema/spring"
+       xmlns:cxf="http://camel.apache.org/schema/cxf"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf-2.8.3.xsd">
+
+    <cxf:cxfEndpoint id="cxfId" address="/myadress"
+                     wsdlURL="META-INF/wsdl/myWsdl.wsdl">
+        <cxf:properties>
+            <entry key="dataFormat" value="PAYLOAD"/>
+        </cxf:properties>
+    </cxf:cxfEndpoint>
+
+    <bean id="processor" class="com.hatexml.beans.CamelProcessor"/>
+
+    <camelContext id="camelId" xmlns="http://camel.apache.org/schema/spring">
+        <camel:route id="routeId">
+            <camel:from uri="cxf:bean:cxfId"/>
+            <camel:log message="${Body}"/>
+            <process ref="processor"/>
+        </camel:route>
+    </camelContext>
+</beans>

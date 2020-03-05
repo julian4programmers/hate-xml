@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://hatexml.com" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  targetNamespace="http://hatexml.com">
+
+    <wsdl:types>
+        <xs:schema targetNamespace="http://hatexml.com">
+            <xs:element name="myInput">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="inputStr" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="myOutput">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element type="xs:string" name="outputStr" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+
+    <wsdl:message name="myInput">
+        <wsdl:part name="in" element="tns:myInput" />
+    </wsdl:message>
+    <wsdl:message name="myOutput">
+        <wsdl:part name="out" element="tns:myOutput" />
+    </wsdl:message>
+
+    <wsdl:portType name="myEndpoint">
+        <wsdl:operation name="foo">
+            <wsdl:input message="tns:myInput" />
+            <wsdl:output message="tns:myOutput" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="mybinding" type="tns:myEndpoint">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="foo">
+            <soap:operation soapAction="http://hatexml.com"
+                            style="document" />
+            <wsdl:input>
+                <soap:body parts="in" use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body parts="out" use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="myEndpointService">
+        <wsdl:port name="myEndpoint" binding="tns:mybinding">
+            <soap:address location="http://localhost:8082/cxf/myaddress" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
